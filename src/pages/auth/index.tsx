@@ -2,15 +2,16 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { databases } from "@/lib/appwrite";
 import { account } from "@/lib/appwrite";
+import { useAuthStore } from "@/store/authStore";
+import { User } from "@/types/auth";
 
 const AuthCallback = () => {
 	const navigate = useNavigate();
+	const { setUser } = useAuthStore();
 
 	useEffect(() => {
 		const ensureUserDocument = async () => {
 			const user = await account.get();
-			console.log(user);
-
 			try {
 				// Check if user has a document
 				const checkUser = await databases.getDocument(
@@ -18,11 +19,18 @@ const AuthCallback = () => {
 					"users",
 					user.$id
 				);
-				console.log("checkUser", checkUser);
 				if (!checkUser) {
-					await databases.createDocument("tj-dev-318", "users", user.$id, {
-						name: user.name,
-					});
+					const newUser = await databases.createDocument(
+						"tj-dev-318",
+						"users",
+						user.$id,
+						{
+							name: user.name,
+						}
+					);
+					setUser(newUser as unknown as User);
+				} else {
+					setUser(checkUser as unknown as User);
 				}
 			} catch (error) {
 				console.log("Something went wrong", error);

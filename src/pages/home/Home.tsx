@@ -1,25 +1,19 @@
 import React from "react";
-import DescriptionBlock from "@/components/description-block/DescriptionBlock";
-import TechStackBlock from "@/components/techstack-block/TechStackBlock";
-import LogoBlock from "@/components/logo-block/LogoBlock";
-import {
-	CrossBlock,
-	CrossRightToLeftBlock,
-} from "@/components/decorated-block/CrossBlock";
-import ProjectBlock from "@/components/project-block/ProjectBlock";
-import ExperienceBlock from "@/components/experience-block/ExperienceBlock";
 import DotBlock from "@/components/decorated-block/DotBlock";
+import WelcomeBlock from "@/components/home/welcome-block";
+import SquadListBlock from "@/components/home/squad-list-block";
 
 const DynamicRowLayout = () => {
 	const contentBlocks = [
-		<LogoBlock />,
-		<DescriptionBlock />,
-		<CrossBlock />,
-		<TechStackBlock />,
-		<CrossRightToLeftBlock />,
-		<ExperienceBlock />,
-		<DotBlock />,
-		<ProjectBlock />,
+		<WelcomeBlock />,
+		<SquadListBlock />,
+		// <DescriptionBlock />,
+		// <CrossBlock />,
+		// <TechStackBlock />,
+		// <CrossRightToLeftBlock />,
+		// <ExperienceBlock />,
+		// <DotBlock />,
+		// <ProjectBlock />,
 		<DotBlock />,
 	];
 

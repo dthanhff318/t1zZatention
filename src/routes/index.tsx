@@ -1,10 +1,12 @@
 import { createBrowserRouter } from "react-router-dom";
 import Layout from "../components/layout/Layout";
-import Home from "./../pages/Home";
 import EPath from "./path";
 import AnimateRouting from "./AnimateRouting";
 import Login from "@/pages/login";
 import AuthCallback from "@/pages/auth";
+import AppLayout from "@/components/layout/AppLayout";
+import Home from "@/pages/home/Home";
+import JourneyStart from "@/pages/journey-start";
 
 const router = createBrowserRouter([
 	{
@@ -13,11 +15,7 @@ const router = createBrowserRouter([
 	},
 	{
 		path: EPath.Home,
-		element: (
-			// <ProtectRoute>
-			<Layout />
-			// </ProtectRoute>
-		),
+		element: <AppLayout />,
 		children: [
 			{
 				path: EPath.Home,
@@ -26,6 +24,16 @@ const router = createBrowserRouter([
 						<Home />
 					</AnimateRouting>
 				),
+			},
+		],
+	},
+	{
+		path: EPath.JourneyStart,
+		element: <AppLayout />,
+		children: [
+			{
+				path: EPath.JourneyStart,
+				element: <JourneyStart />,
 			},
 		],
 	},

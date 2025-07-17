@@ -6,6 +6,7 @@ enum EPath {
 	Career = "/career",
 	Login = "/login",
 	Auth = "/auth/callback",
+	JourneyStart = "/journey-start",
 }
 
 export default EPath;
