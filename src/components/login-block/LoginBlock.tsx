@@ -1,13 +1,13 @@
-import { account } from "@/lib/appwrite";
-import { OAuthProvider } from "appwrite";
+import supabase from "@/lib/supabase";
 
 const LoginBlock = () => {
-	const loginWithGoogle = () => {
-		account.createOAuth2Session(
-			OAuthProvider.Google, // Provider
-			"http://localhost:5173/auth/callback", // Redirect URL after logins
-			"http://localhost:5173" // Redirect URL if user cancel login
-		);
+	const loginWithGoogle = async () => {
+		const { error } = await supabase.auth.signInWithOAuth({
+			provider: "google",
+		});
+		if (error) {
+			console.error("Login error:", error.message);
+		}
 	};
 
 	return (

@@ -175,7 +175,9 @@ const Header = () => {
 							<p className="text-sm font-medium text-text-primary truncate max-w-[120px]">
 								{user?.name}
 							</p>
-							<p className="text-xs text-text-secondary">Level 5 · 1,234 pts</p>
+							<p className="text-xs text-text-secondary">
+								{user?.point} points
+							</p>
 						</div>
 						<motion.button
 							className="relative flex-shrink-0"

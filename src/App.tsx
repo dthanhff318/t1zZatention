@@ -3,9 +3,8 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { useEffect } from "react";
 import appConfigStore from "./store/appConfigStore";
 import { ETheme } from "./helpers/enum";
-import { account, databases } from "@/lib/appwrite.ts";
 import { useAuthStore } from "@/store/authStore.ts";
-import { User } from "@/types/auth.ts";
+import supabase from "@/lib/supabase";
 
 type AppProps = { router: ReturnType<typeof createBrowserRouter> };
 
@@ -26,20 +25,47 @@ const App = ({ router }: AppProps): FunctionComponent => {
 		}
 	}, []);
 
+	const checkUserExist = async (user: any) => {
+		const { data, error } = await supabase
+			.from("users")
+			.select("*")
+			.eq("id", user.id)
+			.maybeSingle();
+		if (error) {
+			console.error("Error checking authentication:", error.message);
+			setUser(null);
+			return;
+		}
+
+		if (!data) {
+			const { error: insertError } = await supabase.from("users").insert(user);
+			if (insertError) {
+				console.error("Error creating user:", insertError.message);
+			} else {
+				console.log("✅ User inserted into DB");
+			}
+		} else {
+			console.log("🚀 ~ checkUserExist ~ data:", data);
+			setUser(data);
+			console.log("✅ User already exists in DB");
+		}
+	};
+
 	useEffect(() => {
 		const checkAuth = async () => {
 			setIsLoading(true);
 			try {
-				const accountUser = await account.get();
-				if (!accountUser) {
+				const { data } = await supabase.auth.getUser();
+				if (!data) {
 					window.location.href = "/login";
 				} else {
-					const user = await databases.getDocument(
-						"tj-dev-318",
-						"users",
-						accountUser.$id
-					);
-					setUser(user as unknown as User);
+					const { user }: { user: any } = data;
+					await checkUserExist({
+						id: user?.id,
+						email: user?.user_metadata?.email,
+						name: user?.user_metadata?.full_name,
+						avatar: user?.user_metadata?.avatar_url,
+					});
 				}
 			} catch (error) {
 				console.error("Error checking auth:", error);

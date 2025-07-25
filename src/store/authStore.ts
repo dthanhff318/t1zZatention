@@ -4,7 +4,7 @@ import { create } from "zustand";
 type AuthStore = {
 	user: User | null;
 	isLoading: boolean;
-	setUser: (user: User) => void;
+	setUser: (user: User | null) => void;
 	setIsLoading: (isLoading: boolean) => void;
 };
 
