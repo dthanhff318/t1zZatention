@@ -10,8 +10,6 @@ import {
 	Code,
 	Globe,
 	Award,
-	BadgeCheck,
-	BadgeCheckIcon,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
@@ -81,7 +79,6 @@ const ExperienceBlock = () => {
 															>
 																{index + 1}. {project.name}
 															</a>
-															<BadgeCheck className="size-4 text-sky-400" />
 														</div>
 														<div className="flex gap-2 flex-col">
 															<p className="text-text-secondary text-xs">
@@ -93,10 +90,6 @@ const ExperienceBlock = () => {
 																		className="text-text-secondary bg-green-600 w-fit hover:bg-green-600"
 																		variant="secondary"
 																	>
-																		<BadgeCheckIcon
-																			size={16}
-																			className="mr-2"
-																		/>
 																		{achievement}
 																	</Badge>
 																))}

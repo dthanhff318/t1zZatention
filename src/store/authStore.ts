@@ -5,19 +5,12 @@ type AuthStore = {
 	user: User | null;
 	isLoading: boolean;
 	setUser: (user: User) => void;
+	setIsLoading: (isLoading: boolean) => void;
 };
 
-export const useAuthStore = create<AuthStore>((set, get) => ({
+export const useAuthStore = create<AuthStore>((set) => ({
 	user: null,
 	isLoading: false,
 	setUser: (user) => set({ user }),
-
-	// logout: async () => {
-	// 	try {
-	// 		await account.deleteSession("current");
-	// 		set({ user: null });
-	// 	} catch (error) {
-	// 		console.error("Logout error:", error);
-	// 	}
-	// },
+	setIsLoading: (isLoading) => set({ isLoading }),
 }));

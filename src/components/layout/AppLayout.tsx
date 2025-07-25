@@ -1,4 +1,5 @@
 import Header from "@/components/layout/Header";
+import UserProfileSlider from "@/components/profile/UserProfileSlider";
 import { Outlet } from "react-router-dom";
 
 const AppLayout = () => {
@@ -8,6 +9,7 @@ const AppLayout = () => {
 				<Header />
 				<Outlet />
 			</div>
+			<UserProfileSlider />
 		</div>
 	);
 };

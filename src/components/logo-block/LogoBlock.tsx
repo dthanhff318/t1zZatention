@@ -22,7 +22,7 @@ const LogoBlock = ({ size = "lg" }: LogoBlockProps) => {
 		>
 			<GradientText
 				className={`text-4xl font-bold ${fontSize[size]}`}
-				text="t1zzVenture"
+				text="t1zzed-Mind"
 				neon
 				gradient="linear-gradient(90deg, #ffffff 0%, #bbbbbb 20%, #666666 50%, #bbbbbb 80%, #ffffff 100%)"
 			/>

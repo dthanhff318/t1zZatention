@@ -9,7 +9,10 @@ import {
 const SelectSquad = () => {
 	return (
 		<div className="p-3 text-text-primary flex flex-col gap-3">
-			<p className="text-base font-semibold">Who are you ?</p>
+			<div className="flex items-center gap-2">
+				<p className="text-base font-semibold">Who are you ?</p>
+				<span className="text-3xl">🙄</span>
+			</div>
 			<Select>
 				<SelectTrigger className="w-full">
 					<SelectValue placeholder="Choose squad" />
