@@ -10,13 +10,11 @@ import {
 	Loader2,
 } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
-import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { useAuthStore } from "@/store/authStore";
 import { missionService, UserMission } from "@/services/missionService";
 
 // Mission types
-type MissionCategory = "daily" | "weekly" | "achievement" | "special";
 type MissionStatus = "locked" | "active" | "completed";
 
 interface Mission {
@@ -54,7 +52,7 @@ const Missions = () => {
 
 				// Transform user missions to display format
 				const transformedMissions: Mission[] = userMissions.map(
-					(userMission: UserMission, index) => ({
+					(userMission: UserMission) => ({
 						id: userMission.mission_code,
 						title: userMission.mission.name,
 						description: userMission.mission.description,
@@ -69,11 +67,11 @@ const Missions = () => {
 									? `${userMission.mission.name} Master`
 									: undefined,
 						},
-						status: !userMission.mission.publish 
-							? "locked" 
+						status: !userMission.mission.publish
+							? "locked"
 							: userMission.completed_at
-							? "completed"
-							: ("active" as MissionStatus),
+								? "completed"
+								: ("active" as MissionStatus),
 						publish: userMission.mission.publish,
 					})
 				);
@@ -89,19 +87,6 @@ const Missions = () => {
 
 		fetchUserMissions();
 	}, [user?.id]);
-
-	const getCategoryColor = (category: MissionCategory) => {
-		switch (category) {
-			case "daily":
-				return "border-blue-500/50 bg-blue-500/10";
-			case "weekly":
-				return "border-purple-500/50 bg-purple-500/10";
-			case "achievement":
-				return "border-yellow-500/50 bg-yellow-500/10";
-			case "special":
-				return "border-pink-500/50 bg-pink-500/10";
-		}
-	};
 
 	const getProgressPercentage = (current: number, required: number) => {
 		return Math.min((current / required) * 100, 100);
@@ -218,7 +203,6 @@ const Missions = () => {
 										whileHover={mission.status !== "locked" ? { y: -5 } : {}}
 										className={cn(
 											"relative rounded-xl border-2 p-3 sm:p-6 backdrop-blur-sm transition-all w-full overflow-hidden",
-											getCategoryColor(mission.category),
 											mission.status === "locked" && "opacity-60",
 											mission.status === "completed" &&
 												"border-green-500/50 bg-green-500/10"
@@ -270,12 +254,6 @@ const Missions = () => {
 														<h3 className="font-semibold text-text-primary text-xs sm:text-base truncate">
 															{mission.title}
 														</h3>
-														<Badge
-															variant="secondary"
-															className="mt-0.5 sm:mt-1 text-[10px] sm:text-xs inline-block"
-														>
-															{mission.category}
-														</Badge>
 													</div>
 												</div>
 												{mission.status === "completed" && (

@@ -1,6 +1,5 @@
 import React, { useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { useNavigate } from "react-router-dom";
 import {
 	X,
 	Camera,
@@ -11,7 +10,6 @@ import {
 	Calendar,
 	Trophy,
 	Clock,
-	Target,
 	LogOut,
 	Loader2,
 	Flame,
@@ -22,9 +20,8 @@ import { useProfileStore } from "@/store/profileStore";
 import supabase from "@/lib/supabase";
 
 const UserProfileSlider = () => {
-	const navigate = useNavigate();
 	const { isProfileOpen, setIsProfileOpen } = useProfileStore();
-	const { user, setUser, clearUser, openLoginModal } = useAuthStore();
+	const { user, setUser } = useAuthStore();
 	const [isEditingName, setIsEditingName] = useState(false);
 	const [tempName, setTempName] = useState(user?.name || "");
 	const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
@@ -347,7 +344,9 @@ const UserProfileSlider = () => {
 										<p className="text-lg font-bold text-text-primary">
 											{user?.streak || 0}
 										</p>
-										<p className="text-xs text-text-secondary">Current Streak</p>
+										<p className="text-xs text-text-secondary">
+											Current Streak
+										</p>
 									</div>
 									<div className="text-center">
 										<div className="flex items-center justify-center mb-1">

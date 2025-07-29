@@ -1,12 +1,4 @@
-import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { useAuthStore } from "@/store/authStore";
-import { User } from "@/types/auth";
-
 const AuthCallback = () => {
-	const navigate = useNavigate();
-	const { setUser } = useAuthStore();
-
 	// useEffect(() => {
 	// 	const ensureUserDocument = async () => {
 	// 		const user = await account.get();

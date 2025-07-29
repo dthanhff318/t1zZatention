@@ -2,7 +2,7 @@ import { RippleButton } from "@/components/animate-ui/buttons/ripple";
 import { Countdown } from "@/components/count-down/count-down";
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Clock, Play, Pause, RotateCcw, Volume2, VolumeX } from "lucide-react";
+import { Clock, Play, Pause, Volume2, VolumeX } from "lucide-react";
 import supabase from "@/lib/supabase";
 import { useAuthStore } from "@/store/authStore";
 

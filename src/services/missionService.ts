@@ -54,7 +54,7 @@ class MissionServiceImpl implements MissionService {
 				mission: item.missions,
 			})) || [];
 
-		return transformedData;
+		return transformedData as any;
 	}
 }
 

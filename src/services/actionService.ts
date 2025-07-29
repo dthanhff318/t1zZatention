@@ -22,6 +22,7 @@ class ActionServiceImpl implements ActionService {
 		await supabase.rpc("increment_user_mission_progress", {
 			user_id: userId,
 			action,
+			payload,
 		});
 	}
 }
