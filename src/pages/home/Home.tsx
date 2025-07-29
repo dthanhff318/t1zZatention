@@ -1,272 +1,205 @@
 import { motion } from "framer-motion";
 import { RippleButton } from "@/components/animate-ui/buttons/ripple";
 import { Badge } from "@/components/ui/badge";
-import {
-	Clock,
-	Trophy,
-	Zap,
-	TrendingUp,
-	Calendar,
-	Gift,
+import { 
+	ArrowRight, 
+	Play, 
+	Sparkles, 
+	Timer, 
+	Target, 
+	Award,
 	Users,
-	ChevronRight,
+	TrendingUp
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import EPath from "@/routes/path";
-import Footer from "@/components/layout/Footer";
 
 const Home = () => {
 	const navigate = useNavigate();
 
-	const fadeInUp = {
-		initial: { opacity: 0, y: 20 },
-		animate: { opacity: 1, y: 0 },
-		transition: { duration: 0.5 },
+	const containerVariants = {
+		hidden: { opacity: 0 },
+		visible: {
+			opacity: 1,
+			transition: {
+				staggerChildren: 0.2,
+				delayChildren: 0.1,
+			},
+		},
 	};
 
-	const staggerChildren = {
-		animate: {
+	const itemVariants = {
+		hidden: { opacity: 0, y: 30 },
+		visible: {
+			opacity: 1,
+			y: 0,
 			transition: {
-				staggerChildren: 0.1,
+				duration: 0.6,
+				ease: "easeOut",
+			},
+		},
+	};
+
+	const floatingVariants = {
+		animate: {
+			y: [-10, 10, -10],
+			transition: {
+				duration: 4,
+				repeat: Infinity,
+				ease: "easeInOut",
 			},
 		},
 	};
 
 	return (
-		<div className="min-h-screen bg-primary flex flex-col">
-			<div className="flex-1">
-				{/* Hero Section */}
-				<section className="relative overflow-hidden">
-					<div className="grid grid-cols-[8%_84%_8%] sm:grid-cols-[15%_70%_15%] lg:grid-cols-[20%_60%_20%]">
-						{/* Left column */}
-						<div className="border-r border-border-primary"></div>
-
-						{/* Middle column */}
-						<div className="border-r border-border-primary">
-							<motion.div
-								className="py-16 sm:py-24 lg:py-32 px-4 sm:px-6"
-								initial="initial"
-								animate="animate"
-								variants={staggerChildren}
-							>
-								{/* Hero Badge */}
-								<motion.div
-									variants={fadeInUp as any}
-									className="flex justify-center mb-6"
-								>
-									<Badge className="text-text-secondary bg-border-secondary hover:bg-border-secondary px-4 py-1.5">
-										<Zap size={14} className="mr-2" />
-										Attention. Achieve. Repeat.
-									</Badge>
-								</motion.div>
-
-								{/* Hero Title */}
-								<motion.h1
-									variants={fadeInUp as any}
-									className="text-4xl sm:text-5xl lg:text-6xl font-bold text-text-primary text-center mb-6"
-								>
-									Master Your Attention,
-									<br />
-									<span className="text-green-500">Unlock Rewards</span>
-								</motion.h1>
-
-								{/* Hero Description */}
-								<motion.p
-									variants={fadeInUp as any}
-									className="text-lg sm:text-xl text-text-secondary text-center mb-8 max-w-2xl mx-auto"
-								>
-									Build unbreakable attention habits. Earn badges, unlock
-									achievements, and join a community of high performers. Your
-									journey to deep work starts here.
-								</motion.p>
-
-								{/* CTA Button */}
-								<motion.div
-									variants={fadeInUp as any}
-									className="flex justify-center"
-								>
-									<RippleButton
-										onClick={() => navigate(EPath.Main)}
-										className="h-12 px-8 text-lg font-semibold bg-green-600 hover:bg-green-700"
-									>
-										Start Now
-										<ChevronRight size={20} className="ml-2" />
-									</RippleButton>
-								</motion.div>
-
-								{/* Stats */}
-								<motion.div
-									variants={fadeInUp as any}
-									className="grid grid-cols-3 gap-4 mt-12 max-w-lg mx-auto"
-								>
-									<div className="text-center">
-										<p className="text-2xl sm:text-3xl font-bold text-text-primary">
-											10K+
-										</p>
-										<p className="text-sm text-text-secondary">Active Users</p>
-									</div>
-									<div className="text-center border-x border-border-primary">
-										<p className="text-2xl sm:text-3xl font-bold text-text-primary">
-											2M+
-										</p>
-										<p className="text-sm text-text-secondary">
-											Attention Hours
-										</p>
-									</div>
-									<div className="text-center">
-										<p className="text-2xl sm:text-3xl font-bold text-text-primary">
-											98%
-										</p>
-										<p className="text-sm text-text-secondary">
-											Performance Boost
-										</p>
-									</div>
-								</motion.div>
-							</motion.div>
-						</div>
-
-						{/* Right column */}
-						<div className="border-border-primary"></div>
-					</div>
-				</section>
-
-				{/* Features Section */}
-				<section className="border-t border-border-primary">
-					<div className="grid grid-cols-[8%_84%_8%] sm:grid-cols-[15%_70%_15%] lg:grid-cols-[20%_60%_20%]">
-						{/* Left column */}
-						<div className="border-r border-border-primary"></div>
-
-						{/* Middle column */}
-						<div className="border-r border-border-primary">
-							<div className="py-16 sm:py-24 px-4 sm:px-6">
-								<motion.h2
-									initial={{ opacity: 0 }}
-									whileInView={{ opacity: 1 }}
-									viewport={{ once: true }}
-									className="text-3xl sm:text-4xl font-bold text-text-primary text-center mb-12"
-								>
-									Everything You Need to Stay Attentive
-								</motion.h2>
-
-								<motion.div
-									className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6"
-									initial="initial"
-									whileInView="animate"
-									viewport={{ once: true }}
-									variants={staggerChildren}
-								>
-									{/* Feature 1 */}
-									<motion.div
-										variants={fadeInUp as any}
-										className="p-6 border border-border-primary rounded-lg hover:border-green-600 transition-colors"
-									>
-										<div className="bg-border-secondary p-3 rounded-lg w-fit mb-4">
-											<Clock className="size-6 text-green-500" />
-										</div>
-										<h3 className="text-xl font-semibold text-text-primary mb-2">
-											Pomodoro Timer
-										</h3>
-										<p className="text-text-secondary">
-											Customizable attention sessions with built-in breaks to
-											maximize productivity.
-										</p>
-									</motion.div>
-
-									{/* Feature 2 */}
-									<motion.div
-										variants={fadeInUp as any}
-										className="p-6 border border-border-primary rounded-lg hover:border-green-600 transition-colors"
-									>
-										<div className="bg-border-secondary p-3 rounded-lg w-fit mb-4">
-											<Trophy className="size-6 text-yellow-500" />
-										</div>
-										<h3 className="text-xl font-semibold text-text-primary mb-2">
-											Achievement System
-										</h3>
-										<p className="text-text-secondary">
-											Earn badges and unlock rewards as you build consistent
-											attention habits.
-										</p>
-									</motion.div>
-
-									{/* Feature 3 */}
-									<motion.div
-										variants={fadeInUp as any}
-										className="p-6 border border-border-primary rounded-lg hover:border-green-600 transition-colors"
-									>
-										<div className="bg-border-secondary p-3 rounded-lg w-fit mb-4">
-											<TrendingUp className="size-6 text-blue-500" />
-										</div>
-										<h3 className="text-xl font-semibold text-text-primary mb-2">
-											Progress Tracking
-										</h3>
-										<p className="text-text-secondary">
-											Visualize your attention journey with detailed analytics
-											and insights.
-										</p>
-									</motion.div>
-
-									{/* Feature 4 */}
-									<motion.div
-										variants={fadeInUp as any}
-										className="p-6 border border-border-primary rounded-lg hover:border-green-600 transition-colors"
-									>
-										<div className="bg-border-secondary p-3 rounded-lg w-fit mb-4">
-											<Calendar className="size-6 text-purple-500" />
-										</div>
-										<h3 className="text-xl font-semibold text-text-primary mb-2">
-											Streak System
-										</h3>
-										<p className="text-text-secondary">
-											Build momentum with daily streaks and consistency rewards.
-										</p>
-									</motion.div>
-
-									{/* Feature 5 */}
-									<motion.div
-										variants={fadeInUp as any}
-										className="p-6 border border-border-primary rounded-lg hover:border-green-600 transition-colors"
-									>
-										<div className="bg-border-secondary p-3 rounded-lg w-fit mb-4">
-											<Gift className="size-6 text-orange-500" />
-										</div>
-										<h3 className="text-xl font-semibold text-text-primary mb-2">
-											Daily Rewards
-										</h3>
-										<p className="text-text-secondary">
-											Get bonus points and special badges for maintaining your
-											attention streak.
-										</p>
-									</motion.div>
-
-									{/* Feature 6 */}
-									<motion.div
-										variants={fadeInUp as any}
-										className="p-6 border border-border-primary rounded-lg hover:border-green-600 transition-colors"
-									>
-										<div className="bg-border-secondary p-3 rounded-lg w-fit mb-4">
-											<Users className="size-6 text-cyan-500" />
-										</div>
-										<h3 className="text-xl font-semibold text-text-primary mb-2">
-											Community
-										</h3>
-										<p className="text-text-secondary">
-											Join attention rooms and compete with friends on the
-											leaderboard.
-										</p>
-									</motion.div>
-								</motion.div>
-							</div>
-						</div>
-
-						{/* Right column */}
-						<div className="border-border-primary"></div>
-					</div>
-				</section>
+		<div className="min-h-screen bg-gradient-to-br from-primary via-primary to-primary/95 relative overflow-hidden">
+			{/* Animated background elements */}
+			<div className="absolute inset-0 overflow-hidden">
+				<motion.div
+					className="absolute top-20 left-20 w-72 h-72 bg-green-500/5 rounded-full blur-3xl"
+					animate={{ 
+						scale: [1, 1.2, 1],
+						opacity: [0.3, 0.1, 0.3]
+					}}
+					transition={{ duration: 8, repeat: Infinity }}
+				/>
+				<motion.div
+					className="absolute bottom-20 right-20 w-96 h-96 bg-blue-500/5 rounded-full blur-3xl"
+					animate={{ 
+						scale: [1.2, 1, 1.2],
+						opacity: [0.1, 0.3, 0.1]
+					}}
+					transition={{ duration: 10, repeat: Infinity }}
+				/>
+				<motion.div
+					className="absolute top-1/2 left-1/2 w-64 h-64 bg-purple-500/5 rounded-full blur-3xl"
+					animate={{ 
+						scale: [1, 1.3, 1],
+						opacity: [0.2, 0.05, 0.2]
+					}}
+					transition={{ duration: 12, repeat: Infinity }}
+				/>
 			</div>
 
-			{/* Footer */}
-			<Footer />
+			{/* Main content */}
+			<div className="relative z-10 min-h-screen flex items-center justify-center px-4 py-16">
+				<div className="max-w-6xl mx-auto text-center">
+					<motion.div
+						variants={containerVariants}
+						initial="hidden"
+						animate="visible"
+						className="space-y-8"
+					>
+						{/* Hero badge */}
+						<motion.div variants={itemVariants} className="flex justify-center">
+							<Badge className="bg-green-500/10 text-green-400 border-green-500/20 px-6 py-2 text-sm font-medium backdrop-blur-sm">
+								<Sparkles className="w-4 h-4 mr-2" />
+								Transform Your Focus Journey
+							</Badge>
+						</motion.div>
+
+						{/* Main heading */}
+						<motion.div variants={itemVariants} className="space-y-6">
+							<h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-text-primary leading-tight">
+								Focus.
+								<br />
+								<span className="text-transparent bg-clip-text bg-gradient-to-r from-green-400 via-blue-400 to-purple-400">
+									Achieve.
+								</span>
+								<br />
+								Repeat.
+							</h1>
+							<p className="text-lg md:text-xl text-text-secondary max-w-3xl mx-auto leading-relaxed">
+								Master deep work with our gamified focus system. 
+								Build streaks, earn rewards, and unlock your potential.
+							</p>
+						</motion.div>
+
+						{/* CTA button */}
+						<motion.div 
+							variants={itemVariants} 
+							className="flex justify-center"
+						>
+							<RippleButton
+								onClick={() => navigate(EPath.Main)}
+								className="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white px-8 py-3 text-base font-semibold rounded-xl shadow-lg shadow-green-500/25 border-0"
+							>
+								<Play className="w-4 h-4 mr-2" />
+								Start Focusing Now
+								<ArrowRight className="w-4 h-4 ml-2" />
+							</RippleButton>
+						</motion.div>
+
+						{/* Feature highlights */}
+						<motion.div 
+							variants={itemVariants}
+							className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-16 max-w-4xl mx-auto"
+						>
+							<motion.div 
+								variants={floatingVariants}
+								animate="animate"
+								className="group p-6 rounded-2xl bg-border-secondary/10 backdrop-blur-sm border border-border-primary/50 hover:border-green-500/30 transition-all duration-300 hover:bg-border-secondary/20"
+							>
+								<div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+									<Timer className="w-6 h-6 text-white" />
+								</div>
+								<h3 className="text-lg font-semibold text-text-primary mb-2">Smart Timer</h3>
+								<p className="text-text-secondary text-sm">Pomodoro technique with AI-powered break suggestions</p>
+							</motion.div>
+
+							<motion.div 
+								variants={floatingVariants}
+								animate="animate"
+								style={{ animationDelay: "1s" }}
+								className="group p-6 rounded-2xl bg-border-secondary/10 backdrop-blur-sm border border-border-primary/50 hover:border-yellow-500/30 transition-all duration-300 hover:bg-border-secondary/20"
+							>
+								<div className="w-12 h-12 bg-gradient-to-br from-yellow-500 to-orange-500 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+									<Award className="w-6 h-6 text-white" />
+								</div>
+								<h3 className="text-lg font-semibold text-text-primary mb-2">Achievements</h3>
+								<p className="text-text-secondary text-sm">Unlock badges and rewards for consistent focus habits</p>
+							</motion.div>
+
+							<motion.div 
+								variants={floatingVariants}
+								animate="animate"
+								style={{ animationDelay: "2s" }}
+								className="group p-6 rounded-2xl bg-border-secondary/10 backdrop-blur-sm border border-border-primary/50 hover:border-purple-500/30 transition-all duration-300 hover:bg-border-secondary/20"
+							>
+								<div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+									<Target className="w-6 h-6 text-white" />
+								</div>
+								<h3 className="text-lg font-semibold text-text-primary mb-2">Goal Tracking</h3>
+								<p className="text-text-secondary text-sm">Set targets and visualize your productivity journey</p>
+							</motion.div>
+						</motion.div>
+
+						{/* Social proof */}
+						<motion.div 
+							variants={itemVariants}
+							className="mt-12 flex flex-wrap justify-center items-center gap-6 text-text-secondary text-sm"
+						>
+							<div className="flex items-center gap-2">
+								<Users className="w-5 h-5 text-green-400" />
+								<span className="font-semibold text-text-primary">12K+</span>
+								<span>Focus Warriors</span>
+							</div>
+							<div className="hidden sm:block w-px h-6 bg-border-primary"></div>
+							<div className="flex items-center gap-2">
+								<TrendingUp className="w-5 h-5 text-blue-400" />
+								<span className="font-semibold text-text-primary">2.5M+</span>
+								<span>Hours Focused</span>
+							</div>
+							<div className="hidden sm:block w-px h-6 bg-border-primary"></div>
+							<div className="flex items-center gap-2">
+								<Award className="w-5 h-5 text-yellow-400" />
+								<span className="font-semibold text-text-primary">95%</span>
+								<span>Success Rate</span>
+							</div>
+						</motion.div>
+					</motion.div>
+				</div>
+			</div>
 		</div>
 	);
 };

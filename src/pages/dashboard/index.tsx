@@ -35,7 +35,7 @@ const Dashboard = () => {
 
 			days.push({
 				date: `${day}/${month}`,
-				hours: parseFloat((Math.random() * 4 + 1).toFixed(1)), // Mock hours with 1 decimal
+				hours: 0, // No fake data - show 0
 			});
 		}
 
@@ -45,31 +45,28 @@ const Dashboard = () => {
 	// Chart data with actual dates
 	const [chartData] = useState(generateLast7Days());
 
-	// Mock badges data
+	// Mock badges data - all disabled
 	const [badges] = useState([
 		{
 			id: 1,
 			name: "First Focus",
 			icon: Target,
 			color: "bg-green-600",
-			achieved: true,
-			date: "2024-01-15",
+			achieved: false,
 		},
 		{
 			id: 2,
 			name: "Week Warrior",
 			icon: Calendar,
 			color: "bg-blue-600",
-			achieved: true,
-			date: "2024-01-22",
+			achieved: false,
 		},
 		{
 			id: 3,
 			name: "Early Bird",
 			icon: Zap,
 			color: "bg-orange-600",
-			achieved: true,
-			date: "2024-01-25",
+			achieved: false,
 		},
 		{
 			id: 4,
@@ -99,19 +96,14 @@ const Dashboard = () => {
 		totalHours: user?.totalTime || 0,
 		currentStreak: user?.streak || 0,
 		longestStreak: user?.max_focus_streak || 0,
-		sessionsCompleted: 89, // Still mock - would need sessions data
-		averageSession: 45, // Still mock - would need sessions data
-		weeklyGoal: 20, // Still mock - would need user preferences
-		weeklyProgress: 21.7, // Still mock - would need weekly data
+		sessionsCompleted: 0, // No fake data - show 0
+		averageSession: 0, // No fake data - show 0
+		weeklyGoal: 0, // No fake data - show 0
+		weeklyProgress: 0, // No fake data - show 0
 	};
 
-	// Recent sessions mock data
-	const recentSessions = [
-		{ id: 1, duration: 45, date: "Today, 2:30 PM", completed: true },
-		{ id: 2, duration: 30, date: "Today, 10:15 AM", completed: true },
-		{ id: 3, duration: 60, date: "Yesterday, 4:00 PM", completed: true },
-		{ id: 4, duration: 25, date: "Yesterday, 9:00 AM", completed: false },
-	];
+	// Recent sessions - no fake data
+	const recentSessions: { id: number; duration: number; date: string; completed: boolean }[] = [];
 
 	const fadeInUp = {
 		initial: { opacity: 0, y: 20 },
@@ -322,31 +314,37 @@ const Dashboard = () => {
 									</div>
 
 									<div className="space-y-3">
-										{recentSessions.map((session) => (
-											<div
-												key={session.id}
-												className="flex items-center justify-between p-3 rounded-lg bg-border-secondary/30"
-											>
-												<div className="flex items-center gap-3">
-													<div
-														className={`size-2 rounded-full ${
-															session.completed ? "bg-green-500" : "bg-red-500"
-														}`}
-													/>
-													<div>
-														<p className="text-sm text-text-primary">
-															{session.duration} minutes
-														</p>
-														<p className="text-xs text-text-secondary">
-															{session.date}
-														</p>
+										{recentSessions.length > 0 ? (
+											recentSessions.map((session) => (
+												<div
+													key={session.id}
+													className="flex items-center justify-between p-3 rounded-lg bg-border-secondary/30"
+												>
+													<div className="flex items-center gap-3">
+														<div
+															className={`size-2 rounded-full ${
+																session.completed ? "bg-green-500" : "bg-red-500"
+															}`}
+														/>
+														<div>
+															<p className="text-sm text-text-primary">
+																{session.duration} minutes
+															</p>
+															<p className="text-xs text-text-secondary">
+																{session.date}
+															</p>
+														</div>
 													</div>
+													<Badge variant="outline" className="text-xs">
+														{session.completed ? "Completed" : "Interrupted"}
+													</Badge>
 												</div>
-												<Badge variant="outline" className="text-xs">
-													{session.completed ? "Completed" : "Interrupted"}
-												</Badge>
+											))
+										) : (
+											<div className="p-6 text-center">
+												<p className="text-text-secondary text-sm">No recent sessions</p>
 											</div>
-										))}
+										)}
 									</div>
 								</div>
 							</motion.div>
