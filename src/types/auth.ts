@@ -6,4 +6,6 @@ export type User = {
 	createdAt: string;
 	updatedAt: string;
 	point: number;
+	streak: number;
+	max_focus_streak: number;
 };

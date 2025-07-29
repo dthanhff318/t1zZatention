@@ -45,7 +45,6 @@ const App = ({ router }: AppProps): FunctionComponent => {
 				console.log("✅ User inserted into DB");
 			}
 		} else {
-			console.log("🚀 ~ checkUserExist ~ data:", data);
 			setUser(data);
 			console.log("✅ User already exists in DB");
 		}
@@ -56,8 +55,8 @@ const App = ({ router }: AppProps): FunctionComponent => {
 			setIsLoading(true);
 			try {
 				const { data } = await supabase.auth.getUser();
-				if (!data) {
-					window.location.href = "/login";
+				if (!data.user) {
+					setUser(null);
 				} else {
 					const { user }: { user: any } = data;
 					await checkUserExist({

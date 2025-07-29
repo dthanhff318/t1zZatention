@@ -15,7 +15,7 @@ import {
 import { motion } from "framer-motion";
 
 const Header = () => {
-	const { user, isLoading } = useAuthStore();
+	const { user, isLoading, openLoginModal } = useAuthStore();
 	const { setIsProfileOpen } = useProfileStore();
 	const navigate = useNavigate();
 	const location = useLocation();
@@ -176,7 +176,7 @@ const Header = () => {
 								{user?.name}
 							</p>
 							<p className="text-xs text-text-secondary">
-								{user?.point} points
+								{user?.streak || 0} day streak 🔥
 							</p>
 						</div>
 						<motion.button
@@ -206,7 +206,7 @@ const Header = () => {
 						transition={{ duration: 0.3 }}
 					>
 						<RippleButton
-							onClick={() => navigate(EPath.Login)}
+							onClick={openLoginModal}
 							className="h-8 sm:h-9 px-3 sm:px-4 text-sm font-medium bg-green-600 hover:bg-green-700 flex items-center gap-1.5 sm:gap-2"
 						>
 							<LogIn size={14} className="sm:hidden" />

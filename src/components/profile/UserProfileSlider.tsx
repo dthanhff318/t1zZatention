@@ -1,5 +1,6 @@
 import React, { useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 import {
 	X,
 	Camera,
@@ -12,20 +13,27 @@ import {
 	Clock,
 	Target,
 	LogOut,
+	Loader2,
+	Flame,
 } from "lucide-react";
 import { RippleButton } from "@/components/animate-ui/buttons/ripple";
 import { useAuthStore } from "@/store/authStore";
 import { useProfileStore } from "@/store/profileStore";
+import supabase from "@/lib/supabase";
 
 const UserProfileSlider = () => {
+	const navigate = useNavigate();
 	const { isProfileOpen, setIsProfileOpen } = useProfileStore();
-	const { user, setUser } = useAuthStore();
+	const { user, setUser, clearUser, openLoginModal } = useAuthStore();
 	const [isEditingName, setIsEditingName] = useState(false);
 	const [tempName, setTempName] = useState(user?.name || "");
 	const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
 	const [hasAvatarChanged, setHasAvatarChanged] = useState(false);
+	const [isUpdatingName, setIsUpdatingName] = useState(false);
+	const [isUpdatingAvatar, setIsUpdatingAvatar] = useState(false);
+	const [isLoggingOut, setIsLoggingOut] = useState(false);
+	const [updateError, setUpdateError] = useState<string | null>(null);
 	const fileInputRef = useRef<HTMLInputElement>(null);
-
 	// Mock user stats
 	const userStats = {
 		totalHours: 156.5,
@@ -35,10 +43,27 @@ const UserProfileSlider = () => {
 		joinDate: "January 2024",
 	};
 
-	const handleSaveName = () => {
+	const handleSaveName = async () => {
 		if (tempName.trim() && user) {
-			setUser({ ...user, name: tempName.trim() });
-			setIsEditingName(false);
+			setIsUpdatingName(true);
+			setUpdateError(null);
+
+			try {
+				const { error } = await supabase
+					.from("users")
+					.update({ name: tempName.trim() })
+					.eq("id", user.id);
+
+				if (error) throw error;
+
+				setUser({ ...user, name: tempName.trim() });
+				setIsEditingName(false);
+			} catch (error) {
+				console.error("Error updating name:", error);
+				setUpdateError("Failed to update name. Please try again.");
+			} finally {
+				setIsUpdatingName(false);
+			}
 		}
 	};
 
@@ -47,10 +72,27 @@ const UserProfileSlider = () => {
 		setIsEditingName(false);
 	};
 
-	const handleSaveAvatar = () => {
+	const handleSaveAvatar = async () => {
 		if (avatarPreview && user) {
-			setUser({ ...user, avatar: avatarPreview });
-			setHasAvatarChanged(false);
+			setIsUpdatingAvatar(true);
+			setUpdateError(null);
+
+			try {
+				const { error } = await supabase
+					.from("users")
+					.update({ avatar: avatarPreview })
+					.eq("id", user.id);
+
+				if (error) throw error;
+
+				setUser({ ...user, avatar: avatarPreview });
+				setHasAvatarChanged(false);
+			} catch (error) {
+				console.error("Error updating avatar:", error);
+				setUpdateError("Failed to update avatar. Please try again.");
+			} finally {
+				setIsUpdatingAvatar(false);
+			}
 		}
 	};
 
@@ -85,6 +127,24 @@ const UserProfileSlider = () => {
 	};
 
 	if (!user) return null;
+
+	const handleLogout = async () => {
+		setIsLoggingOut(true);
+		setUpdateError(null);
+
+		try {
+			const { error } = await supabase.auth.signOut();
+			if (error) throw error;
+			// Close profile slider
+			setUser(null);
+			setIsProfileOpen(false);
+		} catch (error) {
+			console.error("Error logging out:", error);
+			setUpdateError("Failed to log out. Please try again.");
+		} finally {
+			setIsLoggingOut(false);
+		}
+	};
 
 	const onClose = () => setIsProfileOpen(false);
 
@@ -128,6 +188,17 @@ const UserProfileSlider = () => {
 
 						{/* Profile Content */}
 						<div className="p-6 space-y-6">
+							{/* Error Message */}
+							{updateError && (
+								<motion.div
+									initial={{ opacity: 0, y: -10 }}
+									animate={{ opacity: 1, y: 0 }}
+									className="p-3 bg-red-500/10 border border-red-500/20 rounded-lg"
+								>
+									<p className="text-sm text-red-500">{updateError}</p>
+								</motion.div>
+							)}
+
 							{/* Avatar Section */}
 							<div className="text-center">
 								<div className="relative inline-block">
@@ -170,6 +241,7 @@ const UserProfileSlider = () => {
 											onClick={handleCancelAvatar}
 											variant="outline"
 											className="px-4 py-2 border-border-primary hover:bg-border-secondary text-sm text-text-primary hover:text-text-secondary"
+											disabled={isUpdatingAvatar}
 										>
 											<X size={14} className="mr-1" />
 											Cancel
@@ -177,8 +249,13 @@ const UserProfileSlider = () => {
 										<RippleButton
 											onClick={handleSaveAvatar}
 											className="px-4 py-2 bg-green-600 hover:bg-green-700 text-sm text-text-primary "
+											disabled={isUpdatingAvatar}
 										>
-											<Check size={14} className="mr-1" />
+											{isUpdatingAvatar ? (
+												<Loader2 size={14} className="mr-1 animate-spin" />
+											) : (
+												<Check size={14} className="mr-1" />
+											)}
 											Save
 										</RippleButton>
 									</motion.div>
@@ -216,11 +293,16 @@ const UserProfileSlider = () => {
 										/>
 										<motion.button
 											onClick={handleSaveName}
-											className="p-2 bg-green-600 text-white rounded-lg"
+											className="p-2 bg-green-600 text-white rounded-lg disabled:opacity-50"
 											whileHover={{ scale: 1.05 }}
 											whileTap={{ scale: 0.95 }}
+											disabled={isUpdatingName}
 										>
-											<Check size={14} />
+											{isUpdatingName ? (
+												<Loader2 size={14} className="animate-spin" />
+											) : (
+												<Check size={14} />
+											)}
 										</motion.button>
 									</div>
 								) : (
@@ -255,9 +337,27 @@ const UserProfileSlider = () => {
 							{/* Stats */}
 							<div className="border border-border-primary rounded-lg p-4 bg-border-secondary/20">
 								<h3 className="text-text-primary font-medium mb-3">
-									Your Progress
+									Your Focus Stats
 								</h3>
 								<div className="grid grid-cols-3 gap-4">
+									<div className="text-center">
+										<div className="flex items-center justify-center mb-1">
+											<Flame size={16} className="text-orange-500" />
+										</div>
+										<p className="text-lg font-bold text-text-primary">
+											{user?.streak || 0}
+										</p>
+										<p className="text-xs text-text-secondary">Current Streak</p>
+									</div>
+									<div className="text-center">
+										<div className="flex items-center justify-center mb-1">
+											<Trophy size={16} className="text-yellow-500" />
+										</div>
+										<p className="text-lg font-bold text-text-primary">
+											{user?.max_focus_streak || 0}
+										</p>
+										<p className="text-xs text-text-secondary">Best Streak</p>
+									</div>
 									<div className="text-center">
 										<div className="flex items-center justify-center mb-1">
 											<Clock size={16} className="text-green-500" />
@@ -265,25 +365,7 @@ const UserProfileSlider = () => {
 										<p className="text-lg font-bold text-text-primary">
 											{userStats.totalHours}
 										</p>
-										<p className="text-xs text-text-secondary">Hours</p>
-									</div>
-									<div className="text-center">
-										<div className="flex items-center justify-center mb-1">
-											<Target size={16} className="text-blue-500" />
-										</div>
-										<p className="text-lg font-bold text-text-primary">
-											{userStats.streak}
-										</p>
-										<p className="text-xs text-text-secondary">Day Streak</p>
-									</div>
-									<div className="text-center">
-										<div className="flex items-center justify-center mb-1">
-											<Trophy size={16} className="text-yellow-500" />
-										</div>
-										<p className="text-lg font-bold text-text-primary">
-											{userStats.badges}
-										</p>
-										<p className="text-xs text-text-secondary">Badges</p>
+										<p className="text-xs text-text-secondary">Total Hours</p>
 									</div>
 								</div>
 							</div>
@@ -291,14 +373,16 @@ const UserProfileSlider = () => {
 							{/* Actions */}
 							<div className="space-y-3">
 								<RippleButton
-									className="w-full bg-red-600 hover:bg-red-700 text-white"
-									onClick={() => {
-										// Handle logout
-										console.log("Logout clicked");
-									}}
+									className="w-full bg-red-600 hover:bg-red-700 text-white disabled:opacity-50"
+									onClick={handleLogout}
+									disabled={isLoggingOut}
 								>
-									<LogOut size={16} className="mr-2" />
-									Sign Out
+									{isLoggingOut ? (
+										<Loader2 size={16} className="mr-2 animate-spin" />
+									) : (
+										<LogOut size={16} className="mr-2" />
+									)}
+									{isLoggingOut ? "Signing Out..." : "Sign Out"}
 								</RippleButton>
 							</div>
 						</div>

@@ -3,8 +3,11 @@ import { Countdown } from "@/components/count-down/count-down";
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Clock, Play, Pause, RotateCcw, Volume2, VolumeX } from "lucide-react";
+import supabase from "@/lib/supabase";
+import { useAuthStore } from "@/store/authStore";
 
 const MainCountdown = () => {
+	const { user } = useAuthStore();
 	const [duration, setDuration] = useState<string | null>(null);
 	const [timeLeft, setTimeLeft] = useState<number | null>(null);
 	const [isPaused, setIsPaused] = useState(false);
@@ -43,13 +46,44 @@ const MainCountdown = () => {
 		setIsPaused(false);
 	};
 
+	const saveUserActivity = async (totalSeconds: number) => {
+		if (!user) return;
+
+		try {
+			const totalMinutes = Math.floor(totalSeconds / 60);
+			const { error } = await supabase.from("user_activities").insert({
+				user_id: user.id,
+				action: "focus",
+				detail: `${totalMinutes} minutes`,
+			});
+
+			if (error) {
+				console.error("Error saving user activity:", error);
+			} else {
+				console.log("Focus session recorded successfully");
+			}
+		} catch (err) {
+			console.error("Error saving activity:", err);
+		}
+	};
+
+	const checkStreak = async () => {
+		if (!user) return;
+		const { data, error } = await supabase.rpc("process_focus_streak", {
+			p_user_id: user.id,
+		});
+
+		if (error) console.error(error);
+		else console.log(data);
+	};
+
 	const presetDurations = [
-		{ value: "300", label: "5 min", desc: "Quick focus" },
-		{ value: "600", label: "10 min", desc: "Short session" },
-		{ value: "1500", label: "25 min", desc: "Pomodoro" },
-		{ value: "1800", label: "30 min", desc: "Deep work" },
-		{ value: "2700", label: "45 min", desc: "Extended focus" },
-		{ value: "3600", label: "60 min", desc: "Full hour" },
+		{ value: "10", label: "30 min", desc: "Quick focus" },
+		{ value: "2400", label: "40 min", desc: "Short session" },
+		{ value: "3000", label: "50 min", desc: "Standard work" },
+		{ value: "3600", label: "60 min", desc: "Deep work" },
+		{ value: "5400", label: "90 min", desc: "Extended focus" },
+		{ value: "7200", label: "120 min", desc: "Full session" },
 	];
 
 	return (
@@ -162,7 +196,16 @@ const MainCountdown = () => {
 										<Countdown
 											key={timeLeft}
 											totalSeconds={timeLeft}
-											onEnd={() => {
+											onEnd={async () => {
+												// Get the original duration from sessionStorage
+												const originalDuration =
+													sessionStorage.getItem("duration");
+												if (originalDuration) {
+													// Only save activity when session completes naturally
+													await saveUserActivity(Number(originalDuration));
+													await checkStreak();
+												}
+
 												handleEndSession();
 												if (soundEnabled) {
 													const audio = new Audio("/bell.mp3");
@@ -196,15 +239,15 @@ const MainCountdown = () => {
 							</motion.div>
 						</div>
 
-						{/* Control Buttons */}
+						{/* Pause Button Only */}
 						<motion.div
 							initial={{ opacity: 0, y: 10 }}
 							animate={{ opacity: 1, y: 0 }}
 							transition={{ delay: 0.4 }}
-							className="flex flex-col sm:flex-row gap-3"
+							className="flex justify-center"
 						>
 							<RippleButton
-								className="flex-1 h-12 flex items-center justify-center gap-2 bg-border-secondary hover:bg-border-secondary/80 text-text-primary"
+								className="h-12 px-6 flex items-center justify-center gap-2 bg-border-secondary hover:bg-border-secondary/80 text-text-primary"
 								onClick={() => setIsPaused(!isPaused)}
 							>
 								{isPaused ? (
@@ -213,14 +256,6 @@ const MainCountdown = () => {
 									<Pause className="size-4" />
 								)}
 								{isPaused ? "Resume" : "Pause"}
-							</RippleButton>
-
-							<RippleButton
-								className="flex-1 h-12 flex items-center justify-center gap-2 bg-red-600/10 hover:bg-red-600/20 text-red-500 border border-red-500/20"
-								onClick={handleEndSession}
-							>
-								<RotateCcw className="size-4" />
-								End Session
 							</RippleButton>
 						</motion.div>
 
