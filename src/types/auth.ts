@@ -8,4 +8,5 @@ export type User = {
 	point: number;
 	streak: number;
 	max_focus_streak: number;
+	totalTime: number;
 };

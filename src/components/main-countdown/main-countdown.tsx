@@ -5,6 +5,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Clock, Play, Pause, Volume2, VolumeX } from "lucide-react";
 import supabase from "@/lib/supabase";
 import { useAuthStore } from "@/store/authStore";
+import UserService from "@/services/userService";
+import { PRESET_DURATIONS } from "@/constants/timer";
 
 const MainCountdown = () => {
 	const { user } = useAuthStore();
@@ -51,6 +53,20 @@ const MainCountdown = () => {
 
 		try {
 			const totalMinutes = Math.floor(totalSeconds / 60);
+
+			// Validate if totalMinutes matches any preset duration (with small tolerance)
+			const isValidDuration = PRESET_DURATIONS.some((preset) => {
+				const presetMinutes = Math.floor(Number(preset.value) / 60);
+				// Allow 1 minute tolerance for timing deviations
+				return Math.abs(totalMinutes - presetMinutes) <= 1;
+			});
+
+			if (!isValidDuration) {
+				console.log(
+					`Invalid duration (${totalMinutes} minutes) - activity not saved`
+				);
+				return;
+			}
 			const { error } = await supabase.from("user_activities").insert({
 				user_id: user.id,
 				action: "focus",
@@ -60,6 +76,11 @@ const MainCountdown = () => {
 			if (error) {
 				console.error("Error saving user activity:", error);
 			} else {
+				await new UserService().updateUserTotalHours(
+					user.id,
+					Number((totalMinutes / 60).toFixed(2))
+				);
+
 				console.log("Focus session recorded successfully");
 			}
 		} catch (err) {
@@ -76,15 +97,6 @@ const MainCountdown = () => {
 		if (error) console.error(error);
 		else console.log(data);
 	};
-
-	const presetDurations = [
-		{ value: "10", label: "30 min", desc: "Quick focus" },
-		{ value: "2400", label: "40 min", desc: "Short session" },
-		{ value: "3000", label: "50 min", desc: "Standard work" },
-		{ value: "3600", label: "60 min", desc: "Deep work" },
-		{ value: "5400", label: "90 min", desc: "Extended focus" },
-		{ value: "7200", label: "120 min", desc: "Full session" },
-	];
 
 	return (
 		<div className="w-full">
@@ -123,7 +135,7 @@ const MainCountdown = () => {
 							animate={{ opacity: 1 }}
 							transition={{ delay: 0.2 }}
 						>
-							{presetDurations.map((preset, index) => (
+							{PRESET_DURATIONS.map((preset, index) => (
 								<motion.button
 									key={preset.value}
 									initial={{ opacity: 0, scale: 0.9 }}

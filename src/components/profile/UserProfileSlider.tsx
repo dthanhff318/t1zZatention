@@ -18,10 +18,12 @@ import { RippleButton } from "@/components/animate-ui/buttons/ripple";
 import { useAuthStore } from "@/store/authStore";
 import { useProfileStore } from "@/store/profileStore";
 import supabase from "@/lib/supabase";
+import { useNavigate } from "react-router-dom";
 
 const UserProfileSlider = () => {
 	const { isProfileOpen, setIsProfileOpen } = useProfileStore();
 	const { user, setUser } = useAuthStore();
+	const navigate = useNavigate();
 	const [isEditingName, setIsEditingName] = useState(false);
 	const [tempName, setTempName] = useState(user?.name || "");
 	const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
@@ -33,11 +35,15 @@ const UserProfileSlider = () => {
 	const fileInputRef = useRef<HTMLInputElement>(null);
 	// Mock user stats
 	const userStats = {
-		totalHours: 156.5,
 		streak: 7,
 		badges: 3,
 		level: 5,
-		joinDate: "January 2024",
+	};
+
+	// Format the joined date
+	const formatJoinedDate = (dateString: string) => {
+		const date = new Date(dateString);
+		return date.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
 	};
 
 	const handleSaveName = async () => {
@@ -135,6 +141,8 @@ const UserProfileSlider = () => {
 			// Close profile slider
 			setUser(null);
 			setIsProfileOpen(false);
+			// Navigate to index page
+			navigate("/");
 		} catch (error) {
 			console.error("Error logging out:", error);
 			setUpdateError("Failed to log out. Please try again.");
@@ -320,7 +328,7 @@ const UserProfileSlider = () => {
 								<div className="flex items-center gap-3">
 									<Calendar size={16} className="text-text-secondary" />
 									<span className="text-text-secondary text-sm">
-										Joined {userStats.joinDate}
+										Joined {user?.createdAt ? formatJoinedDate(user.createdAt) : 'Recently'}
 									</span>
 								</div>
 								<div className="flex items-center gap-3">
@@ -362,9 +370,9 @@ const UserProfileSlider = () => {
 											<Clock size={16} className="text-green-500" />
 										</div>
 										<p className="text-lg font-bold text-text-primary">
-											{userStats.totalHours}
+											{user?.totalTime || 0}
 										</p>
-										<p className="text-xs text-text-secondary">Total Hours</p>
+										<p className="text-xs text-text-secondary">Total Time</p>
 									</div>
 								</div>
 							</div>

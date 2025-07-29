@@ -129,10 +129,10 @@ const Missions = () => {
 						<div className="flex items-center gap-3 sm:gap-4">
 							<div className="text-right">
 								<p className="text-xs sm:text-sm text-text-secondary">
-									Total Points
+									Total Time
 								</p>
 								<p className="text-xl sm:text-2xl font-bold text-text-primary">
-									2,450
+									{user?.totalTime || 0}
 								</p>
 							</div>
 							<motion.div

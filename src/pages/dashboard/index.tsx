@@ -15,18 +15,35 @@ import {
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { useState } from "react";
+import { useAuthStore } from "@/store/authStore";
 
 const Dashboard = () => {
-	// Mock data for the chart - in real app, this would come from API/store
-	const [chartData] = useState([
-		{ day: "Mon", hours: 2.5 },
-		{ day: "Tue", hours: 3.2 },
-		{ day: "Wed", hours: 1.8 },
-		{ day: "Thu", hours: 4.1 },
-		{ day: "Fri", hours: 3.7 },
-		{ day: "Sat", hours: 2.9 },
-		{ day: "Sun", hours: 3.5 },
-	]);
+	const { user } = useAuthStore();
+
+	// Generate last 7 days with date format
+	const generateLast7Days = () => {
+		const days = [];
+		const today = new Date();
+
+		// Start from 6 days ago to get last 7 days including today
+		for (let i = 6; i >= 0; i--) {
+			const date = new Date();
+			date.setDate(today.getDate() - i);
+
+			const day = date.getDate();
+			const month = date.getMonth() + 1; // getMonth() returns 0-11
+
+			days.push({
+				date: `${day}/${month}`,
+				hours: parseFloat((Math.random() * 4 + 1).toFixed(1)), // Mock hours with 1 decimal
+			});
+		}
+
+		return days;
+	};
+
+	// Chart data with actual dates
+	const [chartData] = useState(generateLast7Days());
 
 	// Mock badges data
 	const [badges] = useState([
@@ -77,15 +94,15 @@ const Dashboard = () => {
 		},
 	]);
 
-	// Mock stats
+	// Stats using real user data with fallbacks
 	const stats = {
-		totalHours: 156.5,
-		currentStreak: 7,
-		longestStreak: 14,
-		sessionsCompleted: 89,
-		averageSession: 45,
-		weeklyGoal: 20,
-		weeklyProgress: 21.7,
+		totalHours: user?.totalTime || 0,
+		currentStreak: user?.streak || 0,
+		longestStreak: user?.max_focus_streak || 0,
+		sessionsCompleted: 89, // Still mock - would need sessions data
+		averageSession: 45, // Still mock - would need sessions data
+		weeklyGoal: 20, // Still mock - would need user preferences
+		weeklyProgress: 21.7, // Still mock - would need weekly data
 	};
 
 	// Recent sessions mock data
@@ -204,7 +221,7 @@ const Dashboard = () => {
 							animate={{ opacity: 1, y: 0 }}
 							transition={{ delay: 0.2 }}
 						>
-							<div className="border border-border-primary rounded-lg p-6 bg-border-secondary/10">
+							<div className="border border-border-primary rounded-lg p-2 md:p-6 bg-border-secondary/10">
 								<div className="flex items-center justify-between mb-6">
 									<div className="flex items-center gap-2">
 										<BarChart3 className="size-5 text-green-500" />
@@ -218,17 +235,17 @@ const Dashboard = () => {
 								</div>
 
 								{/* Column Chart */}
-								<div className="h-48 flex items-end justify-between gap-2 sm:gap-4">
+								<div className="h-48 flex items-end justify-center gap-1 sm:gap-2 md:gap-3 overflow-x-auto overflow-y-hidden">
 									{chartData.map((data, index) => (
 										<motion.div
 											key={index}
-											className="flex-1 flex flex-col items-center gap-2"
+											className="flex flex-col items-center gap-1 w-full"
 											initial={{ height: 0 }}
 											animate={{ height: "100%" }}
 											transition={{ delay: index * 0.1, duration: 0.5 }}
 										>
 											<div className="w-full flex flex-col items-center justify-end h-full">
-												<span className="text-xs text-text-secondary mb-1">
+												<span className="text-[9px] sm:text-[10px] md:text-xs text-text-secondary mb-1">
 													{data.hours}h
 												</span>
 												<div
@@ -239,8 +256,8 @@ const Dashboard = () => {
 													}}
 												/>
 											</div>
-											<span className="text-xs sm:text-sm text-text-secondary">
-												{data.day}
+											<span className="text-[9px] sm:text-[10px] md:text-xs text-text-secondary whitespace-nowrap">
+												{data.date}
 											</span>
 										</motion.div>
 									))}
@@ -255,7 +272,7 @@ const Dashboard = () => {
 							animate={{ opacity: 1, y: 0 }}
 							transition={{ delay: 0.3 }}
 						>
-							<div className="border border-border-primary rounded-lg p-6 bg-border-secondary/10">
+							<div className="border border-border-primary rounded-lg p-2 md:p-6 bg-border-secondary/10">
 								<div className="flex items-center gap-2 mb-6">
 									<Award className="size-5 text-yellow-500" />
 									<h2 className="text-xl font-semibold text-text-primary">
@@ -296,7 +313,7 @@ const Dashboard = () => {
 								animate={{ opacity: 1, y: 0 }}
 								transition={{ delay: 0.4 }}
 							>
-								<div className="border border-border-primary rounded-lg p-6 bg-border-secondary/10 h-full">
+								<div className="border border-border-primary rounded-lg p-2 md:p-6 bg-border-secondary/10 h-full">
 									<div className="flex items-center gap-2 mb-4">
 										<Timer className="size-5 text-blue-500" />
 										<h2 className="text-xl font-semibold text-text-primary">
