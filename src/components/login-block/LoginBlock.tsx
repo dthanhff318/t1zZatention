@@ -4,6 +4,9 @@ const LoginBlock = () => {
 	const loginWithGoogle = async () => {
 		const { error } = await supabase.auth.signInWithOAuth({
 			provider: "google",
+			options: {
+				redirectTo: import.meta.env["VITE_REDIRECT_URL"],
+			},
 		});
 		if (error) {
 			console.error("Login error:", error.message);
