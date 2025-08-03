@@ -43,7 +43,11 @@ const UserProfileSlider = () => {
 	// Format the joined date
 	const formatJoinedDate = (dateString: string) => {
 		const date = new Date(dateString);
-		return date.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+		return date.toLocaleDateString("en-US", {
+			day: "numeric",
+			month: "long",
+			year: "numeric",
+		});
 	};
 
 	const handleSaveName = async () => {
@@ -328,13 +332,16 @@ const UserProfileSlider = () => {
 								<div className="flex items-center gap-3">
 									<Calendar size={16} className="text-text-secondary" />
 									<span className="text-text-secondary text-sm">
-										Joined {user?.createdAt ? formatJoinedDate(user.createdAt) : 'Recently'}
+										Joined{" "}
+										{user?.created_at
+											? formatJoinedDate(user.created_at)
+											: "Recently"}
 									</span>
 								</div>
 								<div className="flex items-center gap-3">
 									<User size={16} className="text-text-secondary" />
 									<span className="text-text-secondary text-sm">
-										Level {userStats.level}
+										Point: {user.point}
 									</span>
 								</div>
 							</div>
@@ -345,26 +352,7 @@ const UserProfileSlider = () => {
 									Your Focus Stats
 								</h3>
 								<div className="grid grid-cols-3 gap-4">
-									<div className="text-center">
-										<div className="flex items-center justify-center mb-1">
-											<Flame size={16} className="text-orange-500" />
-										</div>
-										<p className="text-lg font-bold text-text-primary">
-											{user?.streak || 0}
-										</p>
-										<p className="text-xs text-text-secondary">
-											Current Streak
-										</p>
-									</div>
-									<div className="text-center">
-										<div className="flex items-center justify-center mb-1">
-											<Trophy size={16} className="text-yellow-500" />
-										</div>
-										<p className="text-lg font-bold text-text-primary">
-											{user?.max_focus_streak || 0}
-										</p>
-										<p className="text-xs text-text-secondary">Best Streak</p>
-									</div>
+									{/* Streak stats hidden - under development */}
 									<div className="text-center">
 										<div className="flex items-center justify-center mb-1">
 											<Clock size={16} className="text-green-500" />

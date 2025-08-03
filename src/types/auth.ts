@@ -3,7 +3,7 @@ export type User = {
 	name: string;
 	email: string;
 	avatar: string;
-	createdAt: string;
+	created_at: string;
 	updatedAt: string;
 	point: number;
 	streak: number;

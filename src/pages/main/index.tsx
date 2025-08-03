@@ -156,7 +156,6 @@ const Main = () => {
 												</p>
 											</div>
 										</div>
-										<ChevronRight className="size-5 text-text-secondary" />
 									</div>
 								</motion.div>
 							</div>

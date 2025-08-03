@@ -111,7 +111,7 @@ const Home = () => {
 							</h1>
 							<p className="text-lg md:text-xl text-text-secondary max-w-3xl mx-auto leading-relaxed">
 								Master deep work with our gamified focus system. 
-								Build streaks, earn rewards, and unlock your potential.
+								Earn rewards and unlock your potential.
 							</p>
 						</motion.div>
 

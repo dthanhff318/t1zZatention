@@ -103,7 +103,12 @@ const Dashboard = () => {
 	};
 
 	// Recent sessions - no fake data
-	const recentSessions: { id: number; duration: number; date: string; completed: boolean }[] = [];
+	const recentSessions: {
+		id: number;
+		duration: number;
+		date: string;
+		completed: boolean;
+	}[] = [];
 
 	const fadeInUp = {
 		initial: { opacity: 0, y: 20 },
@@ -149,19 +154,7 @@ const Dashboard = () => {
 								},
 							}}
 						>
-							<motion.div
-								variants={fadeInUp as any}
-								className="p-4 border border-border-primary rounded-lg bg-border-secondary/30"
-							>
-								<div className="flex items-center justify-between mb-2">
-									<Flame className="size-5 text-orange-500" />
-									<span className="text-xs text-text-secondary">Streak</span>
-								</div>
-								<p className="text-2xl font-bold text-text-primary">
-									{stats.currentStreak}
-								</p>
-								<p className="text-xs text-text-secondary">days</p>
-							</motion.div>
+							{/* Streak card hidden - under development */}
 
 							<motion.div
 								variants={fadeInUp as any}
@@ -175,34 +168,6 @@ const Dashboard = () => {
 									{stats.totalHours}
 								</p>
 								<p className="text-xs text-text-secondary">hours</p>
-							</motion.div>
-
-							<motion.div
-								variants={fadeInUp as any}
-								className="p-4 border border-border-primary rounded-lg bg-border-secondary/30"
-							>
-								<div className="flex items-center justify-between mb-2">
-									<Target className="size-5 text-blue-500" />
-									<span className="text-xs text-text-secondary">Sessions</span>
-								</div>
-								<p className="text-2xl font-bold text-text-primary">
-									{stats.sessionsCompleted}
-								</p>
-								<p className="text-xs text-text-secondary">completed</p>
-							</motion.div>
-
-							<motion.div
-								variants={fadeInUp as any}
-								className="p-4 border border-border-primary rounded-lg bg-border-secondary/30"
-							>
-								<div className="flex items-center justify-between mb-2">
-									<Activity className="size-5 text-purple-500" />
-									<span className="text-xs text-text-secondary">Average</span>
-								</div>
-								<p className="text-2xl font-bold text-text-primary">
-									{stats.averageSession}
-								</p>
-								<p className="text-xs text-text-secondary">min/session</p>
 							</motion.div>
 						</motion.div>
 
@@ -296,114 +261,6 @@ const Dashboard = () => {
 								</div>
 							</div>
 						</motion.div>
-
-						{/* Recent Sessions & Weekly Goal */}
-						<div className="grid md:grid-cols-2 gap-8">
-							{/* Recent Sessions */}
-							<motion.div
-								initial={{ opacity: 0, y: 20 }}
-								animate={{ opacity: 1, y: 0 }}
-								transition={{ delay: 0.4 }}
-							>
-								<div className="border border-border-primary rounded-lg p-2 md:p-6 bg-border-secondary/10 h-full">
-									<div className="flex items-center gap-2 mb-4">
-										<Timer className="size-5 text-blue-500" />
-										<h2 className="text-xl font-semibold text-text-primary">
-											Recent Sessions
-										</h2>
-									</div>
-
-									<div className="space-y-3">
-										{recentSessions.length > 0 ? (
-											recentSessions.map((session) => (
-												<div
-													key={session.id}
-													className="flex items-center justify-between p-3 rounded-lg bg-border-secondary/30"
-												>
-													<div className="flex items-center gap-3">
-														<div
-															className={`size-2 rounded-full ${
-																session.completed ? "bg-green-500" : "bg-red-500"
-															}`}
-														/>
-														<div>
-															<p className="text-sm text-text-primary">
-																{session.duration} minutes
-															</p>
-															<p className="text-xs text-text-secondary">
-																{session.date}
-															</p>
-														</div>
-													</div>
-													<Badge variant="outline" className="text-xs">
-														{session.completed ? "Completed" : "Interrupted"}
-													</Badge>
-												</div>
-											))
-										) : (
-											<div className="p-6 text-center">
-												<p className="text-text-secondary text-sm">No recent sessions</p>
-											</div>
-										)}
-									</div>
-								</div>
-							</motion.div>
-
-							{/* Weekly Goal Progress */}
-							<motion.div
-								initial={{ opacity: 0, y: 20 }}
-								animate={{ opacity: 1, y: 0 }}
-								transition={{ delay: 0.5 }}
-							>
-								<div className="border border-border-primary rounded-lg p-6 bg-border-secondary/10 h-full">
-									<div className="flex items-center gap-2 mb-4">
-										<TrendingUp className="size-5 text-purple-500" />
-										<h2 className="text-xl font-semibold text-text-primary">
-											Weekly Goal
-										</h2>
-									</div>
-
-									<div className="space-y-4">
-										<div>
-											<div className="flex justify-between text-sm mb-2">
-												<span className="text-text-secondary">Progress</span>
-												<span className="text-text-primary font-medium">
-													{stats.weeklyProgress}h / {stats.weeklyGoal}h
-												</span>
-											</div>
-											<div className="w-full bg-border-primary rounded-full h-3 overflow-hidden">
-												<motion.div
-													className="h-full bg-gradient-to-r from-green-500 to-green-600"
-													initial={{ width: 0 }}
-													animate={{
-														width: `${Math.min((stats.weeklyProgress / stats.weeklyGoal) * 100, 100)}%`,
-													}}
-													transition={{ duration: 1, delay: 0.5 }}
-												/>
-											</div>
-											<p className="text-xs text-green-500 mt-2">
-												{Math.round(
-													(stats.weeklyProgress / stats.weeklyGoal) * 100
-												)}
-												% completed
-											</p>
-										</div>
-
-										<div className="pt-4 border-t border-border-primary">
-											<p className="text-sm text-text-secondary mb-2">
-												Longest Streak
-											</p>
-											<div className="flex items-center gap-2">
-												<Flame className="size-5 text-orange-500" />
-												<span className="text-2xl font-bold text-text-primary">
-													{stats.longestStreak} days
-												</span>
-											</div>
-										</div>
-									</div>
-								</div>
-							</motion.div>
-						</div>
 					</div>
 				</div>
 

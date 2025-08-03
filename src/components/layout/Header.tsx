@@ -175,9 +175,7 @@ const Header = () => {
 							<p className="text-sm font-medium text-text-primary truncate max-w-[120px]">
 								{user?.name}
 							</p>
-							<p className="text-xs text-text-secondary">
-								{user?.streak || 0} day streak 🔥
-							</p>
+							{/* Streak hidden - under development */}
 						</div>
 						<motion.button
 							className="relative flex-shrink-0"
