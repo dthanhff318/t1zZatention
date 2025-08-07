@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import MainCountdown from "@/components/main-countdown/main-countdown";
 import { motion, AnimatePresence } from "framer-motion";
-import { Brain, Zap, ChevronRight } from "lucide-react";
+import { Brain, Zap } from "lucide-react";
 import { useAuthStore } from "@/store/authStore";
 
 const Main = () => {

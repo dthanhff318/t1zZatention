@@ -8,11 +8,9 @@ import {
 	User,
 	Mail,
 	Calendar,
-	Trophy,
 	Clock,
 	LogOut,
 	Loader2,
-	Flame,
 } from "lucide-react";
 import { RippleButton } from "@/components/animate-ui/buttons/ripple";
 import { useAuthStore } from "@/store/authStore";
@@ -33,12 +31,6 @@ const UserProfileSlider = () => {
 	const [isLoggingOut, setIsLoggingOut] = useState(false);
 	const [updateError, setUpdateError] = useState<string | null>(null);
 	const fileInputRef = useRef<HTMLInputElement>(null);
-	// Mock user stats
-	const userStats = {
-		streak: 7,
-		badges: 3,
-		level: 5,
-	};
 
 	// Format the joined date
 	const formatJoinedDate = (dateString: string) => {

@@ -4,14 +4,10 @@ import {
 	Clock,
 	Target,
 	Zap,
-	TrendingUp,
 	Calendar,
 	Star,
-	Flame,
 	Award,
-	Activity,
 	BarChart3,
-	Timer,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { useState } from "react";
@@ -101,14 +97,6 @@ const Dashboard = () => {
 		weeklyGoal: 0, // No fake data - show 0
 		weeklyProgress: 0, // No fake data - show 0
 	};
-
-	// Recent sessions - no fake data
-	const recentSessions: {
-		id: number;
-		duration: number;
-		date: string;
-		completed: boolean;
-	}[] = [];
 
 	const fadeInUp = {
 		initial: { opacity: 0, y: 20 },
